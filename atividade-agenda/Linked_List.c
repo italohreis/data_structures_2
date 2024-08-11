@@ -60,9 +60,10 @@ void list_insert(char *name, char *tel, unsigned int ID, List *list) {
 
 void verificar_agenda(List *list, char *str) {
     Node *aux = list->begin;
+    size_t len = strlen(str);
 
-    while(aux != NULL) {
-        if (strstr(aux->name, str) != NULL) {
+    while (aux != NULL) {
+        if (strncmp(aux->name, str, len) == 0) {
             printf("%s\n", aux->name);
         }
         aux = aux->next;
