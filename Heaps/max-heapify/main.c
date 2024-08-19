@@ -1,11 +1,11 @@
 #include <stdio.h>
 
 int left(int i) {
-    return 2*i;
+    return 2*i +1;
 }
 
 int right(int i) {
-    return 2*i + 1;
+    return 2*i + 2;
 }
 
 void max_heapify(int *array, int i, int size) {
@@ -18,7 +18,7 @@ void max_heapify(int *array, int i, int size) {
     else
         largest = i;
 
-    if (r <= size && array[r] > array[largest]) 
+    if (r < size && array[r] > array[largest]) 
         largest = r;
     
     if (largest != i) {
@@ -31,13 +31,20 @@ void max_heapify(int *array, int i, int size) {
 
 int main() {
 
-    int array[9] = {1, 2, 3, 4, 5, 6, 7, 8, 9};   
+    int array[10] = {4,1,3,2,16,9,10,14,8,7};   
 
     int size1 = sizeof(array) / sizeof(array[0]);   //tamanho do array
     printf("array size -> %d\n", size1);
-    max_heapify(array, 1, size1);
-    for(int i = 0; i < size1; i++) 
-        printf("%d, ", array[i]);
+    
+    int i;
+    for (i = size1/2 - 1; i >= 0; i--) {
+        max_heapify(array, i, size1);
+    }
+
+    int j;
+    for(j = 0;j < size1; j++) {
+        printf("%d, ", array[j]);
+    }
     
     return 0;
 }
