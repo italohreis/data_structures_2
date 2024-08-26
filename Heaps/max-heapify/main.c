@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 int left(int i) {
-    return 2*i +1;
+    return 2*i + 1;
 }
 
 int right(int i) {
@@ -35,16 +35,9 @@ int main() {
 
     int size1 = sizeof(array) / sizeof(array[0]);   //tamanho do array
     printf("array size -> %d\n", size1);
-    
-    int i;
-    for (i = size1/2 - 1; i >= 0; i--) {
-        max_heapify(array, i, size1);
-    }
-
-    int j;
-    for(j = 0;j < size1; j++) {
-        printf("%d, ", array[j]);
-    }
+    max_heapify(array, 1, size1);
+    for(int i = 0; i < size1; i++)
+        printf("%d, ", array[i]);
     
     return 0;
 }
