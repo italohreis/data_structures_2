@@ -1,15 +1,14 @@
 #ifndef ARVORE_H
 #define ARVORE_H
+typedef struct _no {
+  int key;
+  struct _no *left, *right;
+} TNo;
 
-typedef struct _arvore {
-    struct _Node *raiz;
-}Arvore;
-
-typedef struct _Node {
-    struct _Node *left, *right;
-    int info;
-}Node;
+TNo *TNo_createNFill(int);
+TNo *BinTree_readFromStr(char *);
+void BinTree_inorder(TNo *root);
+void BinTree_posorder(TNo *root);
+void BinTree_preorder(TNo *root);
 
 #endif
-
-
