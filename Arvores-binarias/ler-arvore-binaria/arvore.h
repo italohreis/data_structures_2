@@ -6,7 +6,7 @@ typedef struct _no {
 } TNo;
 
 TNo *TNo_createNFill(int);
-TNo *BinTree_readFromStr(char *);
+TNo *BinTree_readFromStr(char **);
 void BinTree_inorder(TNo *root);
 void BinTree_posorder(TNo *root);
 void BinTree_preorder(TNo *root);

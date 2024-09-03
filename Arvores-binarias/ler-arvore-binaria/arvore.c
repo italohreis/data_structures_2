@@ -19,22 +19,24 @@ void BinTree_inorder(TNo *root) {
   }
 }
 
-TNo *BinTree_readFromStr(char *str) {
+TNo *BinTree_readFromStr(char **str) {
   TNo *root = NULL;
-  if (*str == '(') {
-    str++;
-    if (*str != ')') {
+  if (**str == '(') {
+    (*str)++;
+    if (**str != ')') {
       int key;
-      if (sscanf(str, "%d", &key) == 1) {
+      if (sscanf(*str, "%d", &key) == 1) {
         root = TNo_createNFill(key);
-        while (*str != ')' && *str != '\0' && *str != '(')
-          str++;
+        while (**str != ')' && **str != '\0' && **str != '(') {
+          (*str)++;
+        }
         root->left = BinTree_readFromStr(str);
         root->right = BinTree_readFromStr(str);
       }
     }
   }
-  if (*str == ')')
-    str++;
+
+  if (**str == ')')
+      (*str)++;
   return root;
 }

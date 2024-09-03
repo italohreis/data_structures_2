@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 void printTree(TNo *root) {
-  printf("Inorder:");
+  printf("\nInorder:");
   BinTree_inorder(root);
   printf("\n");
 }
@@ -11,7 +11,9 @@ int main(void) {
   char str[4096];
   if (scanf("%s", str) == 1)
     printf("%s", str);
-  root = BinTree_readFromStr(str);
+  
+  char *p = str;
+  root = BinTree_readFromStr(&p);
   printTree(root);
   return 0;
 }
