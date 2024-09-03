@@ -51,6 +51,66 @@ void insert(Tree *tree, int value) {
     }
 }
 
+void remove_node(Tree *tree, int value) {
+    Node *z = tree->root;
+    while (z != NULL && z->key != value) {
+        if (value < z->key) {
+            z = z->left;
+        } else {
+            z = z->right;
+        }
+    }
+    if (z == NULL) {
+        return;
+    }
+
+    if (z->left == NULL) {
+        transplante(tree, z, z->right);
+    } else if(z->right == NULL) {
+        transplante(tree, z, z->left);
+    } else {
+        Node *y = tree_minimum(z->right);
+        if (y->p != z) {
+            transplante(tree, y, y->right);
+            y->right = z->right;
+            y->right->p = y;
+        }
+        transplante(tree, z, y);
+        y->left = z->left;
+        y->left->p = y;
+    }    
+
+    free(z);
+}
+
+void transplante(Tree *tree, Node *u, Node *v) {
+    if (u->p == NULL) {
+        tree->root = v; 
+    } else if(u == u->p->left) {
+        u->p->left = v;
+    } else {
+        u->p->right = v;
+    }
+
+    if (v != NULL)
+        v->p = u->p;
+}
+
+Node *tree_minimum(Node *node) {
+    while (node->left != NULL) {
+        node = node->left;
+    }
+    return node;
+}
+
+Node *tree_maximum(Node *node) {
+    while (node->right != NULL) {
+        node = node->right;
+    }
+    return node;
+}
+
+
 void print_tree_preorder(Node *node) {
     if (node != NULL) {
         printf("%d, ", node->key);  
