@@ -1,5 +1,7 @@
 #include "arvore.h"
 #include <stdlib.h>
+#include <stdio.h>
+#include <stdbool.h>
 
 struct _node {
     int key;
@@ -18,23 +20,29 @@ Tree *tree_create() {
     return tree;
 }
 
-void node_create(Node **node, int x) {
-    (*node)->key = x;
-    (*node)->left = NULL;
-    (*node)->right = NULL;
+Node *node_create(int x) {
+    Node *node = (Node *) malloc(sizeof(Node));
+    if (node != NULL) {
+        node->key = x;
+        node->balance = 0;
+        node->left = NULL;
+        node->right = NULL;
+    }
+    return node;
 }
 
 void node_insert(Node **pt, int x, bool *h) {
-    if ((*pt) == NULL) {
-        (*pt) = (Node *) malloc(sizeof(Node));
+    if (*pt == NULL) {
+        *pt = node_create(x);
         *h = true;
-    } 
+        return;
+    }
 
     if (x < (*pt)->key) {
-        node_insert(&(*pt)->left, x, *h);
+        node_insert(&(*pt)->left, x, h);
 
         if (*h == true) {
-            switch ((*pt)->balance) {   
+            switch ((*pt)->balance) {
                 case 1:
                     (*pt)->balance = 0;
                     *h = false;
@@ -43,11 +51,13 @@ void node_insert(Node **pt, int x, bool *h) {
                     (*pt)->balance = -1;
                     break;
                 case -1:
-                    case1((*pt), *h);    //rebalanceamentos
+                    case1(pt, h);  // rebalanceamento à esquerda
+                    break;
             }
         }
-    } else {
-        node_insert(&(*pt)->right, x, *h);
+    } else if (x > (*pt)->key) {  // nao deixa duplicação de chave
+        node_insert(&(*pt)->right, x, h);
+
         if (*h == true) {
             switch ((*pt)->balance) {
                 case -1:
@@ -58,12 +68,14 @@ void node_insert(Node **pt, int x, bool *h) {
                     (*pt)->balance = 1;
                     break;
                 case 1:
-                    case2((*pt), *h);    //rebalanceamentos
+                    case2(pt, h);  // rebalanceamento à direita
+                    break;
             }
         }
     }
 }
 
+// Rebalanceamento à esquerda
 void case1(Node **pt, bool *h) {
     Node *ptu = (*pt)->left;
 
@@ -78,7 +90,7 @@ void case1(Node **pt, bool *h) {
         ptv->left = ptu;
         (*pt)->left = ptv->right;
         ptv->right = (*pt);
-        
+
         if (ptv->balance == -1) {
             (*pt)->balance = 1;
         } else {
@@ -96,6 +108,7 @@ void case1(Node **pt, bool *h) {
     *h = false;
 }
 
+// rebalanceamento à direita
 void case2(Node **pt, bool *h) {
     Node *ptu = (*pt)->right;
 
@@ -110,7 +123,7 @@ void case2(Node **pt, bool *h) {
         ptv->right = ptu;
         (*pt)->right = ptv->left;
         ptv->left = (*pt);
-        
+
         if (ptv->balance == 1) {
             (*pt)->balance = -1;
         } else {
@@ -132,9 +145,14 @@ Node *get_root(Tree *tree) {
     return tree->root;
 }
 
+void tree_insert(Tree *tree, int x) {
+    bool h = false;
+    node_insert(&tree->root, x, &h);
+}
+
 void pre_order(Node *pt) {
     if (pt != NULL) {
-        printf("\n%d, ", pt->key);
+        printf("%d, ", pt->key);
         pre_order(pt->left);
         pre_order(pt->right);
     }

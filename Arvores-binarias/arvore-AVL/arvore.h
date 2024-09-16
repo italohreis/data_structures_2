@@ -7,7 +7,7 @@ typedef struct _node Node;
 
 Tree *tree_create();
 
-void node_create(Node **pt, int x);
+Node *node_create(int x);
 
 void node_insert(Node **pt, int x, bool *h);
 
@@ -16,6 +16,8 @@ void case1(Node **pt, bool *h);
 void case2(Node **pt, bool *h);
 
 Node *get_root(Tree *tree);
+
+void tree_insert(Tree *tree, int x);
 
 void pre_order(Node *pt);
 
