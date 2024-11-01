@@ -17,9 +17,9 @@ void contarDigitos(int contagem[], char chaves[][11]) {
 
 // função para calcular o desvio de cada dígito baseado na nova fórmula
 void calcularDesvios(int contagem[], double desvios[]) {
-    double media = (double)MAX_KEYS / DIGIT_COUNT;
+    double media = (double)(MAX_KEYS * DIGIT_COUNT) / DIGIT_COUNT;  // média esperada
     for (int i = 0; i < DIGIT_COUNT; i++) {
-        desvios[i] = fabs(contagem[i] - media);
+        desvios[i] = fabs(contagem[i] - media);  // cálculo do desvio absoluto
         printf("Desvio do digito %d: %.2f\n", i, desvios[i]);
     } 
 }
