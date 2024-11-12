@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <math.h>
 
 #define MAX_KEYS 10000
@@ -17,7 +18,7 @@ void contarDigitos(int contagem[], char chaves[][11]) {
 
 // função para calcular o desvio de cada dígito baseado na nova fórmula
 void calcularDesvios(int contagem[], double desvios[]) {
-    double media = (double)(MAX_KEYS * DIGIT_COUNT) / 10;  // média esperada
+    double media = (double) MAX_KEYS * DIGIT_COUNT / 10;  // média esperada
     for (int i = 0; i < DIGIT_COUNT; i++) {
         desvios[i] = fabs(contagem[i] - media);  // cálculo do desvio absoluto
         printf("Desvio do digito %d: %.2f\n", i, desvios[i]);
@@ -40,19 +41,18 @@ void encontrarMenoresDesvios(double desvios[], int indices[]) {
     }
 }
 
-
 // função de hash para armazenar as chaves no vetor baseado nos dígitos escolhidos
-int armazenarChaves(char chaves[][11], int tabelaHash[HASH_SIZE], int indices[]) {
+int armazenarChaves(char chaves[][11], char tabelaHash[HASH_SIZE][11], int indices[]) {
     int colisoes = 0;
     for (int i = 0; i < MAX_KEYS; i++) {
         int posicao = 0;
         for (int j = 0; j < 4; j++) {
             posicao = posicao * 10 + (chaves[i][indices[j]] - '0');
         }
-        if (tabelaHash[posicao] != -1) {
+        if (tabelaHash[posicao][0] != '\0') {
             colisoes++; // se a posição já está ocupada, há uma colisão
         }
-        tabelaHash[posicao] = i; // armazenar a chave no índice da posição calculada
+        strcpy(tabelaHash[posicao], chaves[i]); // armazenar a chave na tabela
     }
     return colisoes;
 }
@@ -73,22 +73,10 @@ int main() {
     int contagem[DIGIT_COUNT] = {0};
     double desvios[DIGIT_COUNT] = {0};
     int menoresIndices[4];
-    int tabelaHash[HASH_SIZE];
-
-    // inicializar tabela hash com -1 para indicar posições vazias
-    for (int i = 0; i < HASH_SIZE; i++) {
-        tabelaHash[i] = -1;
-    }
+    char tabelaHash[HASH_SIZE][11] = {0}; // inicializar com strings vazias
 
     // contagem de quantas vezes cada dígito aparece
     contarDigitos(contagem, chaves);
-
-    // imprimir contagem
-    printf("Contagem de digitos:\n");
-    for (int i = 0; i < DIGIT_COUNT; i++) {
-        printf("%d: %d\n", i, contagem[i]);
-    }
-    printf("\n");
 
     // calcular desvios
     calcularDesvios(contagem, desvios);
@@ -100,12 +88,28 @@ int main() {
     int colisoes = armazenarChaves(chaves, tabelaHash, menoresIndices);
 
     //resultados
+
+    // imprimir contagem
+    printf("\nContagem de digitos:\n");
+    for (int i = 0; i < DIGIT_COUNT; i++) {
+        printf("%d: %d\n", i, contagem[i]);
+    }
+
     printf("\nDigitos com menor desvio: ");
     for (int i = 0; i < 4; i++) {
         printf("%d ", menoresIndices[i]);
     }
-    printf("\n\n");
-    printf("Total de colisoes: %d\n", colisoes);
+
+    // imprimir tabela hash
+
+    printf("\n\nTabela hash:\n");
+    for (int i = 0; i < HASH_SIZE; i++) {
+        if (tabelaHash[i][0] != '\0') {
+            printf("%d: %s\n", i, tabelaHash[i]);
+        }
+    }
+
+    printf("\n\nTotal de colisoes: %d\n", colisoes);
 
     return 0;
 }
